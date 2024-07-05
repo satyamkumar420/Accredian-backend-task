@@ -16,6 +16,13 @@ app.use(cors());
 app.post("/api/referral", async (req, res) => {
   const { referrerName, referrerEmail, refereeName, refereeEmail } = req.body;
 
+  // Validate referrer email
+  if (referrerEmail !== process.env.EMAIL_USER) {
+    return res
+      .status(400)
+      .json({ message: "Referrer email doesn't match the configured email." });
+  }
+
   try {
     await prisma.referral.create({
       data: { referrerName, referrerEmail, refereeName, refereeEmail },
